@@ -92,10 +92,12 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 #else
 #error Compiler not supported!
 #endif
+//if (specific CCR/Timer goes off)
 {
   P1OUT ^= LED0;                            // Toggle P1.0
   CCR0 += 50000;                            // Add Offset to CCR0
 }
+//else if(different CCR/timer goes off){ blink other LED }
 
-
+// ACLK is 32768 Hz
 
