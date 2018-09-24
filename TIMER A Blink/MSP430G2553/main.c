@@ -66,15 +66,19 @@
 //   Built with CCS Version 4.2.0 and IAR Embedded Workbench Version: 5.10
 //******************************************************************************
 
-#include <msp430.h>
+#include <msp430G2553.h>
+
+#define LED0 BIT0   //defining LED0 as BIT0
+#define LED1 BIT6   //defining LED1 as BIT6
+#define BUTTON BIT3 //defining BUTTON as BIT3
 
 int main(void)
 {
   WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
   P1DIR |= 0x01;                            // P1.0 output
   CCTL0 = CCIE;                             // CCR0 interrupt enabled
-  CCR0 = 50000;
-  TACTL = TASSEL_2 + MC_2;                  // SMCLK, contmode
+  CCR0 = 50000;                            //set capture compare register
+  TACTL = TASSEL_2 + MC_2 + ID_2;           // SMCLK, up mode, input divider = 4
 
   __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
 }
@@ -89,6 +93,9 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 #error Compiler not supported!
 #endif
 {
-  P1OUT ^= 0x01;                            // Toggle P1.0
+  P1OUT ^= LED0;                            // Toggle P1.0
   CCR0 += 50000;                            // Add Offset to CCR0
 }
+
+
+
