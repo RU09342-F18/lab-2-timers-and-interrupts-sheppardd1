@@ -11,22 +11,43 @@
 
 #include <msp430G2553.h>
 
-#define LED0 BIT0   //defining LED0 as BIT0
 #define LED1 BIT6   //defining LED1 as BIT6
 #define BUTTON BIT3 //defining BUTTON as BIT3
 
+int speed;
 
 int main(void)  //begin main function
 {
     WDTCTL = WDTPW + WDTHOLD;   // Stop watchdog timer
-    P1DIR |= (LED0 + LED1);     // Set P1.0 (LED) to be an output
+    P1DIR |= (LED1);     // Set P1.0 (LED) to be an output
 
-    P1OUT &= ~LED0;             // shut off LED0
+    P1OUT &= ~LED1;             // shut off LED0
     P1IE |= BUTTON;             // enable P1.3 interrupt
 
     P1IFG &= ~BUTTON;           // clear the P1.3 interrupt flag
 
     __enable_interrupt();       // enable interrupts
+
+    speed = 0;
+
+    while(1){
+
+    while(speed == 0){      //low speed
+        P1OUT ^= LED1;
+        __delay_cycles(500000);
+    }
+
+    while(speed == 1){      //medium speed
+        P1OUT ^= LED1;
+        __delay_cycles(250000);
+    }
+
+    while(speed == 2){      //high speed
+        P1OUT ^= LED1;
+        __delay_cycles(125000);
+    }
+
+    }
 
 }
 
@@ -35,9 +56,16 @@ int main(void)  //begin main function
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)   //take care of interrupt coming from port 1
 {
-P1OUT ^= (LED0 + LED1);         // P1.0 gets toggled
+
 P1IFG &= ~BUTTON;               // clear the P1.3 interrupt flag
 P1IES ^= BUTTON;                // toggle the interrupt edge,
+if(P1IES == 0){                 //want this to happen only on falling edge of button
+    if(speed != 2)
+        speed++;
+    else if(speed == 2)
+        speed = 0;
+    else speed = 0; //should never execute, but just in case
+}
 // the interrupt vector will be called
 // when P1.3 goes from HitoLow as well as
 // LowtoHigh
