@@ -112,7 +112,11 @@ __interrupt void Port_1(void)   //take care of interrupt coming from port 1
 P1IFG &= ~BUTTON;               // clear the P1.3 interrupt flag
 P1IES ^= BUTTON;                // toggle the interrupt edge,
 if(P1IES == 0){                 //want this to happen only on falling edge of button
+    TACTL = MC_1;
+}
+else{
     rate = TA0R;
+    CCR0 = TA0R;
 }
 // the interrupt vector will be called
 // when P1.3 goes from HitoLow as well as
