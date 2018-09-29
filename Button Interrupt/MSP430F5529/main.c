@@ -9,7 +9,7 @@
 //LEDs are on when button is held down, off when button is not held
 //This uses the interrupt method
 
-#include <msp430.h>
+#include <msp430f5529.h>
 
 #define LED1 BIT0   //defining LED1 as BIT6
 #define BUTTON BIT1 //defining BUTTON as BIT3
