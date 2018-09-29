@@ -122,7 +122,7 @@ if(P1IES == 0){                 //want this to happen only on falling edge of bu
 }
 else{                           //else if rising edge, set rate to timer value
     rate = TA0R;                //set rate to value of Timer at negative edge
-    CCR0 = TA0R;
+    CCR0 = TA0R;                //set CCR0 to that values as well
 }
 
 // the interrupt vector will be called
