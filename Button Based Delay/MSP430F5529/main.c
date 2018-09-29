@@ -72,7 +72,7 @@
 #include <msp430F5529.h>
 
 #define LED0 BIT0   //defining LED0 as BIT0
-#define BUTTON BIT1 //defining BUTTON as BIT3
+#define BUTTON BIT3 //defining BUTTON as BIT3
 
 int Hz_to_timer(int);
 
@@ -83,9 +83,9 @@ int main(void)
   rate = 50000; //default
   WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
   P1DIR |= 0x01;                            // P1.0 output
-  CCTL0 = CCIE;                             // CCR0 interrupt enabled
-  CCR0 = rate;                            //set capture compare register
-  TACTL = TASSEL_1 + MC_1 + ID_0;           // SMCLK, up mode, input divider = 4
+  RCCTL0 = CCIE;                             // CCR0 interrupt enabled
+  TA0CCR0 = rate;                            //set capture compare register
+  TA0CTL = TASSEL_1 + MC_1 + ID_0;           // SMCLK, up mode, input divider = 4
   P1IFG &= ~BUTTON;                         // clear the P1.3 interrupt flag
 
   __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
@@ -102,7 +102,7 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 #endif
 {
   P1OUT ^= LED0;                            // Toggle P1.0
-  CCR0 = rate;                            // Add Offset to CCR0
+  TA0CCR0 = rate;                            // Add Offset to CCR0
 }
 // ACLK is 32768 Hz
 
@@ -115,11 +115,11 @@ __interrupt void Port_1(void)   //take care of interrupt coming from port 1
 P1IFG &= ~BUTTON;               // clear the P1.3 interrupt flag
 P1IES ^= BUTTON;                // toggle the interrupt edge,
 if(P1IES == 0){                 //want this to happen only on falling edge of button
-    TACTL = MC_1 + TACLR;       //set to Up mode and clear timer
+    TA0CTL = MC_1 + TACLR;       //set to Up mode and clear timer
 }
 else{                           //else if rising edge, set rate to timer value
     rate = TA0R;
-    CCR0 = TA0R;
+    TA0CCR0 = TA0R;
 }
 
 // the interrupt vector will be called

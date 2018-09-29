@@ -89,7 +89,9 @@ int main(void)
   TACTL = TASSEL_1 + MC_1 + ID_0;           // SMCLK, up mode, input divider = 4
   P1IFG &= ~BUTTON;                         // clear the P1.3 interrupt flag
 
-  __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
+  //__bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
+  __enable_interrupt();       // enable interrupts
+
 }
 
 // Timer A0 interrupt service routine
