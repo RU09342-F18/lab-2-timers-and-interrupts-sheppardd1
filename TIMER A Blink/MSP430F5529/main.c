@@ -74,7 +74,7 @@ int main(void)
   P1DIR |= 0x01;                            // P1.0 output
   TA1CCTL0 = CCIE;                          // CCR0 interrupt enabled
   TA1CCR0 = 60000;
-  TA1CTL = TASSEL_2 + MC_2 + TACLR + ID_1;         // SMCLK, contmode, clear TAR
+  TA1CTL = TASSEL_2 + MC_2 + TACLR + ID_1;         // SMCLK, contmode, clear TAR, divider = 1/2
 
   __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0, enable interrupts
   __no_operation();                         // For debugger
