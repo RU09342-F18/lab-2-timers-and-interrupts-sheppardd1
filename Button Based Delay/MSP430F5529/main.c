@@ -72,8 +72,7 @@
 #include <msp430F5529.h>
 
 #define LED0 BIT0   //defining LED0 as BIT0
-#define LED1 BIT6   //defining LED1 as BIT6
-#define BUTTON BIT3 //defining BUTTON as BIT3
+#define BUTTON BIT1 //defining BUTTON as BIT3
 
 int Hz_to_timer(int);
 
