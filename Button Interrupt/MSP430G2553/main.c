@@ -19,7 +19,7 @@ int speed;
 int main(void)  //begin main function
 {
     WDTCTL = WDTPW + WDTHOLD;   // Stop watchdog timer
-    P1DIR |= (LED1);     // Set P1.0 (LED) to be an output
+    P1DIR |= (LED1);     // Set P1.6 (LED) to be an output
 
     P1OUT &= ~LED1;             // shut off LED0
     P1IE |= BUTTON;             // enable P1.3 interrupt
