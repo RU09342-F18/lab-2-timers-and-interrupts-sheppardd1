@@ -66,6 +66,9 @@
 //   Built with CCS Version 4.2.0 and IAR Embedded Workbench Version: 5.10
 //******************************************************************************
 
+
+//Button Based Delay
+
 #include <msp430G2553.h>
 
 #define LED0 BIT0   //defining LED0 as BIT0
@@ -84,6 +87,7 @@ int main(void)
   CCTL0 = CCIE;                             // CCR0 interrupt enabled
   CCR0 = rate;                            //set capture compare register
   TACTL = TASSEL_1 + MC_1 + ID_0;           // SMCLK, up mode, input divider = 4
+  P1IFG &= ~BUTTON;                         // clear the P1.3 interrupt flag
 
   __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
 }
@@ -104,7 +108,7 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 // ACLK is 32768 Hz
 
 
-// Port 1 interrupt service routine
+// Port 1 interrupt service routine (for button)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void)   //take care of interrupt coming from port 1
 {
@@ -114,10 +118,11 @@ P1IES ^= BUTTON;                // toggle the interrupt edge,
 if(P1IES == 0){                 //want this to happen only on falling edge of button
     TACTL = MC_1 + TACLR;       //set to Up mode and clear timer
 }
-else{
+else{                           //else if rising edge, set rate to timer value
     rate = TA0R;
     CCR0 = TA0R;
 }
+
 // the interrupt vector will be called
 // when P1.3 goes from HitoLow as well as
 // LowtoHigh
