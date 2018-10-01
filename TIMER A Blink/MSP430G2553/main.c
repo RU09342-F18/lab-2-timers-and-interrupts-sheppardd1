@@ -72,18 +72,19 @@
 #define LED1 BIT6   //defining LED1 as BIT6
 #define BUTTON BIT3 //defining BUTTON as BIT3
 
-int Hz_to_timer(int);
+unsigned int Hz_to_timer(unsigned int Hz, int ID);
 
-int time;
+unsigned int time;
 
 int main(void)
 {
   WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
+  BCSCTL3 = LFXT1S_2;                       //interfaces with crystal
   P1DIR |= 0x41;                            // P1.0 output
   CCTL0 = CCIE;                             // CCR0 interrupt enabled
-  time = Hz_to_timer(2);
+  time = Hz_to_timer(1, 0);
   CCR0 = time;                            //set capture compare register
-  TACTL = TASSEL_1 + MC_1 + ID_1;           // ACLK, up mode, input divider = 4
+  TACTL = TASSEL_1 + MC_1 + ID_0;           // ACLK, up mode, input divider = 0
 
   __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0 w/ interrupt
 }
@@ -103,10 +104,10 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 }
 // ACLK is 32768 Hz
 
-int Hz_to_timer(int Hz)
-{
-   if(Hz <= 32768)
-       return (32768 / Hz);
+unsigned int Hz_to_timer(unsigned int Hz, int ID)
+{//assuming ID_0
+   if(Hz <= (32768 << ID))
+       return ((32768 << ID) / Hz);
    else
        return 1;
 }
