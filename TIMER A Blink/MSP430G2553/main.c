@@ -82,7 +82,7 @@ int main(void)
   BCSCTL3 = LFXT1S_2;                       //interfaces with crystal
   P1DIR |= 0x41;                            // P1.0 output
   CCTL0 = CCIE;                             // CCR0 interrupt enabled
-  time = Hz_to_timer(1, 0);
+  time = Hz_to_timer(1, 0);                 //setting signal to 2 HZ (since period = Hz*2 for this code because the light toggles every time CCR is reached and CCR = Hz)
   CCR0 = time;                            //set capture compare register
   TACTL = TASSEL_1 + MC_1 + ID_0;           // ACLK, up mode, input divider = 0
 
