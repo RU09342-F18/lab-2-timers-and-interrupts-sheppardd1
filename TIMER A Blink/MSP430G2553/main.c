@@ -105,7 +105,7 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer_A (void)
 // ACLK is 32768 Hz
 
 unsigned int Hz_to_timer(unsigned int Hz, int ID)
-{//assuming ID_0
+{//ID is divider
    if(Hz <= (32768 << ID))
        return ((32768 << ID) / Hz);
    else
